@@ -181,13 +181,12 @@ void sendVoltageToServer(float voltage) {
 
   JsonDocument doc;
 
-  // Identificação do dispositivo
-  doc["device"] = "ESP32";
-  doc["mac"] = WiFi.macAddress();
+  // Array de sensores
+  JsonArray sensors = doc.createNestedArray("sensors");
 
-  // Dados do sensor (formato esperado pela API)
-  JsonObject data = doc.createNestedObject("data");
-  data["voltA"] = voltage;
+  JsonObject sensor = sensors.createNestedObject();
+  sensor["type"] = "voltA";
+  sensor["value"] = voltage;
 
   String json;
   serializeJson(doc, json);
