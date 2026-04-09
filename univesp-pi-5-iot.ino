@@ -17,8 +17,8 @@
 const float VREF = 3.3;
 const int ADC_RES = 4095;
 
-float calibration = 597;
-float offset = -46;
+float calibration = 580.7;
+float offset = -50.7;
 
 const int samples = 2000;
 
@@ -35,10 +35,15 @@ bool KEEP_OFF = false;
 // =============================
 // WiFi
 // =============================
-const char* WIFI_SSID     = "SSID";
-const char* WIFI_PASSWORD = "PWD";
+const char* WIFI_SSID     = "XXXXX";
+const char* WIFI_PASSWORD = "XXXXX";
 
-const String API_URL = "http://your_server:8000/update/";
+// Configuração de IP fixo
+//IPAddress local_IP(192, 168, 1, 128);   // IP desejado
+//IPAddress gateway(192, 168, 1, 1);      // Gateway (roteador)
+//IPAddress subnet(255, 255, 255, 0);     // Máscara de rede
+
+const String API_URL = "https://xxxxxx/update/";
 
 const unsigned long SENSORS_READ_INTERVAL = 5000;
 const unsigned long LED_BLINK_INTERVAL = 100;
@@ -140,6 +145,9 @@ bool connectToWiFi() {
 
       Serial.printf("IP: %s\n", WiFi.localIP().toString().c_str());
 
+      Serial.print("MAC: ");
+      Serial.println(WiFi.macAddress());
+
       setupOTA();
 
       blinkLED(1, KEEP_ON);
@@ -180,6 +188,8 @@ void sendVoltageToServer(float voltage) {
   http.addHeader("Content-Type", "application/json");
 
   JsonDocument doc;
+
+  doc["mac"] = WiFi.macAddress();
 
   // Array de sensores
   JsonArray sensors = doc.createNestedArray("sensors");
